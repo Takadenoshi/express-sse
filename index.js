@@ -68,7 +68,7 @@ class SSE extends EventEmitter {
       }
       res.write(`data: ${JSON.stringify(data.data)}\n\n`);
       res.flush();
-    };
+    }
 
     const serializeListener = data => {
       const serializeSend = data.reduce((all, msg) => {
@@ -85,9 +85,14 @@ class SSE extends EventEmitter {
 
     if (this.initial) {
       if (this.options.isSerialized) {
-        this.serialize(this.initial);
+        const data = this.initial;
+        if (Array.isArray(data)) {
+          serializeListener(data);
+        } else {
+          dataListener({ data });
+        }
       } else if (this.initial.length > 0) {
-        this.send(this.initial, this.options.initialEvent || false);
+        dataListener({ data: this.initial, event: this.options.initialEvent || false });
       }
     }
 
