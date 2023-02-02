@@ -83,6 +83,8 @@ class SSE extends EventEmitter {
 
     this.on('serialize', serializeListener);
 
+    const ping = () => dataListener({ data: '', event: this.options.pingEvent ?? 'ping' });
+
     if (this.initial) {
       if (this.options.isSerialized) {
         const data = this.initial;
@@ -97,7 +99,7 @@ class SSE extends EventEmitter {
     }
 
     if (this.options.pingInterval) {
-      this.pingIntervalID = setInterval(this.ping, this.options.pingInterval);
+      this.pingIntervalID = setInterval(ping, this.options.pingInterval);
     }
 
     // Remove listeners and reduce the number of max listeners on client disconnect
@@ -111,9 +113,6 @@ class SSE extends EventEmitter {
     });
   }
 
-  ping = () => {
-    this.send(null, this.options.pingEvent ?? 'ping');
-  }
   /**
    * Update the data initially served by the SSE stream
    * @param {array} data array containing data to be served on new connections
