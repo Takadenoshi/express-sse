@@ -96,14 +96,24 @@ class SSE extends EventEmitter {
       }
     }
 
+    if (this.options.pingInterval) {
+      this.pingIntervalID = setInterval(this.ping, this.options.pingInterval);
+    }
+
     // Remove listeners and reduce the number of max listeners on client disconnect
     req.on('close', () => {
       this.removeListener('data', dataListener);
       this.removeListener('serialize', serializeListener);
       this.setMaxListeners(this.getMaxListeners() - 2);
+      if (this.pingIntervalID) {
+        clearInterval(this.pingIntervalID);
+      }
     });
   }
 
+  ping = () => {
+    this.send(null, this.options.pingEvent ?? 'ping');
+  }
   /**
    * Update the data initially served by the SSE stream
    * @param {array} data array containing data to be served on new connections
