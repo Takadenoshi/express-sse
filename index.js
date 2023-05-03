@@ -96,7 +96,7 @@ class SSE extends EventEmitter {
         } else {
           dataListener({ data });
         }
-      } else if (this.initial.length > 0) {
+      } else {
         dataListener({ data: this.initial, event: this.options.initialEvent || false });
       }
     }
