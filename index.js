@@ -21,8 +21,6 @@ class SSE extends EventEmitter {
 
     if (initial) {
       this.initial = initial;
-    } else {
-      this.initial = [];
     }
 
     if (options) {
@@ -43,7 +41,7 @@ class SSE extends EventEmitter {
       req.socket.setTimeout(0);
       req.socket.setNoDelay(true);
       req.socket.setKeepAlive(true);
-      res.statusCode = 200;
+      res.statusCode = this.options.status ?? 200;
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('X-Accel-Buffering', 'no');
@@ -62,7 +60,7 @@ class SSE extends EventEmitter {
     const dataListener = data => {
       if (data.id) {
         res.write(`id: ${data.id}\n`);
-      } else {
+      } else if (!this.options.noID) {
         res.write(`id: ${id}\n`);
         id += 1;
       }
@@ -89,6 +87,10 @@ class SSE extends EventEmitter {
     this.on('serialize', serializeListener);
 
     const ping = () => dataListener({ data: '', event: this.options.pingEvent ?? 'ping' });
+
+    if (this.options.retry) {
+      res.write(`retry: ${this.options.retry}\n`);
+    }
 
     if (this.initial) {
       if (this.options.isSerialized) {
@@ -130,7 +132,7 @@ class SSE extends EventEmitter {
    * Empty the data initially served by the SSE stream
    */
   dropInit() {
-    this.initial = [];
+    this.initial = undefined;
   }
 
   /**

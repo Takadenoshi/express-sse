@@ -1,6 +1,6 @@
 {
   "name": "express-sse",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "An Express middleware for Server-Sent Events (EventSource)",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dpskvn/express-sse.git"
+    "url": "git://github.com/takadenoshi/express-sse.git"
   },
   "keywords": [
     "express",
@@ -22,9 +22,9 @@
   "author": "Dino Paskvan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dpskvn/express-sse/issues"
+    "url": "https://github.com/takadenoshi/express-sse/issues"
   },
-  "homepage": "https://github.com/dpskvn/express-sse",
+  "homepage": "https://github.com/takadenoshi/express-sse",
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^4.18.2",
