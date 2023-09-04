@@ -52,6 +52,7 @@ class SSE extends EventEmitter {
         res.setHeader('Content-Encoding', 'deflate');
       }
     } catch(e) {
+      console.error('Express-sse error while setting headers', e.message);
     }
 
     // Increase number of event listeners on init
