@@ -74,6 +74,14 @@ class SSE extends EventEmitter {
       }
     }
 
+    const commentListener = data => {
+      const commentBody = data ?? 'c';
+      res.write(`:${commentBody}\n`);
+      if (res.flush) {
+        res.flush();
+      }
+    }
+
     const serializeListener = data => {
       const serializeSend = data.reduce((all, msg) => {
         all += `id: ${id}\ndata: ${JSON.stringify(msg)}\n\n`;
@@ -81,9 +89,14 @@ class SSE extends EventEmitter {
         return all;
       }, '');
       res.write(serializeSend);
+      if (res.flush) {
+        res.flush();
+      }
     };
 
     this.on('data', dataListener);
+
+    this.on('comment', commentListener);
 
     this.on('serialize', serializeListener);
 
@@ -156,6 +169,14 @@ class SSE extends EventEmitter {
     } else {
       this.send(data);
     }
+  }
+
+  /**
+   * Send comment to the SSE
+   * @param {(string)} data comment to send into the stream
+   */
+  comment(data) {
+    this.emit('comment', data);
   }
 }
 
